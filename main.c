@@ -34,6 +34,7 @@ int main() {
                 break;
             case 5:
                 printf("'Deposito' selecionado.\n");
+                deposito(tamanho, clientes);
                 break;
             case 6:
                 printf("'Extrato' selecionado.\n");
