@@ -1,10 +1,25 @@
 #include "biblioteca.h"
 #include <stdio.h>
-
+#include <string.h>
 char nome_do_arquivo[20] = "lista_de_clientes";
+
 void limpa(){
     int c;
     while ((c = getchar()) != '\n' && c != EOF) { }
+}
+
+int verificaCPF(int tam, Cliente *clientes, char *compara){
+
+    int aux = 0;
+    int ret;
+    for (int i = 0; i < tam; i++) {
+        ret = strncmp(compara, clientes[i].cpf, 11);
+        if(ret == 0){
+            aux = 1;
+            return aux;
+        }
+    }
+    return aux;
 }
 
 int tam(Cliente *clientes) {
@@ -46,8 +61,10 @@ void novo_cliente(Cliente *clientes) {
 
 void listar_clientes(int tam, Cliente *clientes){
     for(int i = 0; i < tam; i++){
-        printf("Cliente %d\n", i+1);
-        printf("Nome: %s\n\n",clientes[i].nome);
+        printf("Cliente %n\n", i+1);
+        printf("Nome: %s\n",clientes[i].nome);
+        printf("Saldo: %s\n",clientes[i].saldo);
+        printf("CPF: %s\n\n",clientes[i].cpf);
     }
 }
 
@@ -59,3 +76,29 @@ void escreve(int tam,  Cliente *clientes) {
         fclose(arquivo);
     }
 }
+
+void debito(int tam, Cliente *clientes){
+    char temp[20];
+    int aux = 0, valor;
+
+    limpa();
+    printf("Insira o seu CPF: ");
+    scanf("%20[^\n]s", temp);
+
+    aux = verificaCPF(tam, clientes, temp);
+
+    if(!aux) printf("CPF nao encontrado.\n");
+
+    else{
+        for (int i = 0; i < tam; i++) {
+            aux = strncmp(temp, clientes[i].cpf, 11);
+
+            if(aux == 0){
+                printf("Insira o valor que deseja ser debitado da sua conta: ");
+                scanf("%d", &valor);
+                clientes[i].saldo -= valor;
+            }
+        }
+    }
+}
+

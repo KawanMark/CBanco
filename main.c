@@ -30,6 +30,7 @@ int main() {
                 break;
             case 4:
                 printf("'Debito' selecionado.\n");
+                debito(tamanho, clientes);
                 break;
             case 5:
                 printf("'Deposito' selecionado.\n");
