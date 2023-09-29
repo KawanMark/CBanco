@@ -47,7 +47,7 @@ void novo_cliente(Cliente *clientes) {
 void listar_clientes(int tam, Cliente *clientes){
     for(int i = 0; i < tam; i++){
         printf("Cliente %d\n", i+1);
-        printf("Nome: %d\n",clientes[i].nome);
+        printf("Nome: %s\n\n",clientes[i].nome);
     }
 }
 
@@ -57,6 +57,5 @@ void escreve(int tam,  Cliente *clientes) {
     if (arquivo) {
         fwrite(clientes, sizeof(Cliente), tam, arquivo);
         fclose(arquivo);
-
     }
 }
