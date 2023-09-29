@@ -61,9 +61,9 @@ void novo_cliente(Cliente *clientes) {
 
 void listar_clientes(int tam, Cliente *clientes){
     for(int i = 0; i < tam; i++){
-        printf("Cliente %n\n", i+1);
+        printf("Cliente %d\n", i+1);
         printf("Nome: %s\n",clientes[i].nome);
-        printf("Saldo: %s\n",clientes[i].saldo);
+        printf("Saldo: %lf\n",clientes[i].saldo);
         printf("CPF: %s\n\n",clientes[i].cpf);
     }
 }
