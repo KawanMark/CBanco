@@ -22,6 +22,20 @@ int verificaCPF(int tam, Cliente *clientes, char *compara){
     return aux;
 }
 
+int verificaSenha(int tam, Cliente *clientes, char *compara){
+
+    int aux = 0;
+    int ret;
+    for (int i = 0; i < tam; i++) {
+        ret = strncmp(compara, clientes[i].senha, 15);
+        if(ret == 0){
+            aux = 1;
+            return aux;
+        }
+    }
+    return aux;
+}
+
 int tam(Cliente *clientes) {
     FILE *arquivo = fopen(nome_do_arquivo, "rb");
     int cont = 0;
@@ -63,7 +77,8 @@ void listar_clientes(int tam, Cliente *clientes){
     for(int i = 0; i < tam; i++){
         printf("Cliente %d\n", i+1);
         printf("Nome: %s\n",clientes[i].nome);
-        printf("Saldo: %lf\n",clientes[i].saldo);
+        printf("Saldo: %.2lf\n",clientes[i].saldo);
+        printf("Senha: %s\n",clientes[i].senha);
         printf("CPF: %s\n\n",clientes[i].cpf);
     }
 }
@@ -78,25 +93,41 @@ void escreve(int tam,  Cliente *clientes) {
 }
 
 void debito(int tam, Cliente *clientes){
-    char temp[20];
-    int aux = 0, valor;
+    char cpf[20];
+    char senha[20];
+    int aux = 0, aux2, valor, confirma = 0;
 
     limpa();
     printf("Insira o seu CPF: ");
-    scanf("%20[^\n]s", temp);
+    scanf("%20[^\n]s", cpf);
 
-    aux = verificaCPF(tam, clientes, temp);
+    aux = verificaCPF(tam, clientes, cpf);
 
     if(!aux) printf("CPF nao encontrado.\n");
 
     else{
-        for (int i = 0; i < tam; i++) {
-            aux = strncmp(temp, clientes[i].cpf, 11);
+        do {
+            limpa();
+            printf("Insira a sua senha: ");
+            scanf("%20[^\n]s", senha);
+            aux = verificaSenha(tam, clientes, senha);
+            if(aux){
+                confirma = 1;
+                aux2 = 1;
+            } else{
+                printf("Senha invalida. (1 - sair / 0 - tentar novamente)\n");
+                scanf("%d", &confirma);
+            }
+        } while (confirma != 1);
 
-            if(aux == 0){
-                printf("Insira o valor que deseja ser debitado da sua conta: ");
-                scanf("%d", &valor);
-                clientes[i].saldo -= valor;
+        if(aux2){
+            for (int i = 0; i < tam; i++) {
+                aux = strncmp(cpf, clientes[i].cpf, 11);
+                if(aux == 0){
+                    printf("Insira o valor que deseja ser debitado da sua conta: ");
+                    scanf("%d", &valor);
+                    clientes[i].saldo -= valor;
+                }
             }
         }
     }
