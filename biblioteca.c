@@ -24,6 +24,15 @@ int verificaCPF(int tam, Cliente *clientes, char *compara){
     return aux;
 }
 
+int cpfExiste(int tam, Cliente *clientes, const char *cpf) {
+    for (int i = 0; i < tam; i++) {
+        if (strcmp(clientes[i].cpf, cpf) == 0) {
+            return 1; // CPF encontrado
+        }
+    }
+    return 0; // CPF não encontrado
+}
+
 int verificaSenha(int tam, Cliente *clientes, char *compara){
 
     int aux = 0;
@@ -50,14 +59,6 @@ int tam(Cliente *clientes) {
     return cont;
 }
 
-int cpfExiste(int tam, Cliente *clientes, const char *cpf) {
-    for (int i = 0; i < tam; i++) {
-        if (strcmp(clientes[i].cpf, cpf) == 0) {
-            return 1;
-        }
-    }
-    return 0;
-}
 
 void novo_cliente(Cliente *clientes) {
     limpa();
@@ -66,18 +67,22 @@ void novo_cliente(Cliente *clientes) {
     scanf("%100[^\n]s", clientes->nome);
     limpa();
 
+    int valido = 0;
+
     do{
         printf("CPF: ");
         scanf("%20[^\n]s", clientes->cpf);
         limpa();
 
-        if(cpfExiste((int) tam, clientes, clientes->cpf)){
+        if(verificaCPF(tam(clientes), clientes, clientes->cpf)){
             printf("CPF ja existente, por favor insira um CPF diferente\n");
         }
-    } while(cpfExiste((int) tam, clientes, clientes->cpf));
-    limpa();
+        else{
+            valido = 1;
+        }
+    } while(!valido);
 
-    int valido = 0;
+     valido = 0;
 
     do {
         printf("Tipo de Conta: (comum ou plus) " );
