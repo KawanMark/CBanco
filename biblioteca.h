@@ -5,7 +5,7 @@ typedef struct {
 
     double valor;
     double taxa;
-    char descricao[10];
+    char descricao[50];
 
 }Operacoes;
 

@@ -295,6 +295,25 @@ void transferencia(int tam, Cliente *clientes) {
         printf("Conta de origem ou conta de destino nao encontrada.\n");
     }
 }
+void imprimirExtrato(Cliente cliente) {
+    printf("Extrato do Cliente:\n");
+    printf("Nome: %s\n", cliente.nome);
+    printf("CPF: %s\n", cliente.cpf);
+    printf("Tipo de Conta: %s\n", cliente.tipo);
+    printf("Saldo Atual: %.2lf\n", cliente.saldo);
+
+    printf("Transacoes:\n");
+    for (int j = 0; j < 100; j++) {
+        if (cliente.historico[j].valor != 0) {
+            printf("Transacao %d:\n", j + 1);
+            printf("Descricao: %s\n", cliente.historico[j].descricao);
+            printf("Valor: %.2lf\n", cliente.historico[j].valor);
+            if (strcmp(cliente.historico[j].descricao, "Debito") == 0) {
+                printf("Taxa do Debito: %.2lf\n", cliente.historico[j].taxa);
+            }
+        }
+    }
+}
 
 void extrato(int tam, Cliente *clientes) {
     char cpf[20];
@@ -334,27 +353,9 @@ void extrato(int tam, Cliente *clientes) {
         }
 
         if (indice != -1) {
-            printf("Extrato do Cliente:\n");
-            printf("Nome: %s\n", clientes[indice].nome);
-            printf("CPF: %s\n", clientes[indice].cpf);
-            printf("Tipo de Conta: %s\n", clientes[indice].tipo);
-            printf("Saldo Atual: %.2lf\n", clientes[indice].saldo);
-
-            printf("Transacoes:\n");
-            for (int i = 0; i < tam; i++) {
-                for (int j = 0; j < 100; j++) {
-                    if (clientes[i].historico[j].valor != 0) {
-                        printf("Transacao %d: %.2lf\n", j + 1, clientes[i].historico[j].valor);
-                        printf("Descricao: %s\n", clientes[i].historico[j].descricao);
-                    }
-                }
-            }
+            imprimirExtrato(clientes[indice]);
         } else {
             printf("Erro interno: cliente nao encontrado.\n");
         }
     }
 }
-
-
-
-
