@@ -18,7 +18,7 @@ int main() {
         switch (opcao) {
             case 1:
                 printf("'Novo Cliente' selecionado.\n");
-                novo_cliente(&clientes[tamanho]);
+                novo_cliente(tamanho, &clientes[tamanho]);
                 tamanho++;
                 break;
             case 2:

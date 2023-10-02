@@ -21,11 +21,9 @@ typedef struct {
 
 int tam(Cliente *clientes);
 void listar_clientes(int tam, Cliente *cliente);
-void novo_cliente(Cliente *cliente);
+void novo_cliente(int tamanho, Cliente *clientes);
 void escreve(int tam,  Cliente *cliente);
 void debito(int tam, Cliente *clientes);
 void deposito(int tam, Cliente *clientes);
-int cpfExiste(int tam, Cliente *clientes, const char *cpf);
-
 
 #endif
