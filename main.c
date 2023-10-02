@@ -23,6 +23,7 @@ int main() {
                 break;
             case 2:
                 printf("'Apaga Cliente' selecionado.\n");
+                apagar_cliente(&tamanho, clientes);
                 break;
             case 3:
                 printf("'Listar Cliente' selecionado.\n");
@@ -38,9 +39,11 @@ int main() {
                 break;
             case 6:
                 printf("'Extrato' selecionado.\n");
+                extrato(tamanho, clientes);
                 break;
             case 7:
                 printf("'Transferencia entre contas' selecionado.\n");
+                transferencia(tamanho, clientes);
                 break;
             case 0:
                 printf("'Sair' selecionado.\n");

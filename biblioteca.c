@@ -10,6 +10,24 @@ void limpa(){
     while ((c = getchar()) != '\n' && c != EOF) { }
 }
 
+void apagar_cliente(int *tam, Cliente *clientes) {
+    int indice;
+
+    printf("Insira o indice do cliente que deseja apagar: ");
+    scanf("%d", &indice);
+
+    if (indice >= 1 && indice <= *tam) {
+        for (int i = indice - 1; i < *tam - 1; i++) {
+            clientes[i] = clientes[i + 1];
+        }
+
+        (*tam)--;
+        printf("Cliente no indice %d apagado com sucesso.\n", indice);
+    } else {
+        printf("Índice invalido. Insira um indice valido.\n");
+    }
+}
+
 int verificaCPF(int tam, Cliente *clientes, char *compara){
 
     int aux = 0;
@@ -125,8 +143,7 @@ void escreve(int tam,  Cliente *clientes) {
         fclose(arquivo);
     }
 }
-
-void debito(int tam, Cliente *clientes){
+void debito(int tam, Cliente *clientes) {
     char cpf[20];
     char senha[20];
     int aux = 0, aux2, valor, confirma = 0;
@@ -137,31 +154,58 @@ void debito(int tam, Cliente *clientes){
 
     aux = verificaCPF(tam, clientes, cpf);
 
-    if(!aux) printf("CPF nao encontrado.\n");
-
-    else{
+    if (!aux) {
+        printf("CPF nao encontrado.\n");
+    } else {
         do {
             limpa();
             printf("Insira a sua senha: ");
             scanf("%20[^\n]s", senha);
             aux = verificaSenha(tam, clientes, senha);
-            if(aux){
+            if (aux) {
                 confirma = 1;
                 aux2 = 1;
-            } else{
+            } else {
                 printf("Senha invalida. (1 - sair / 0 - tentar novamente)\n");
                 scanf("%d", &confirma);
             }
         } while (confirma != 1);
 
-        if(aux2){
+        if (aux2) {
+            int indice = -1;
+
             for (int i = 0; i < tam; i++) {
                 aux = strncmp(cpf, clientes[i].cpf, 11);
-                if(aux == 0){
-                    printf("Insira o valor que deseja ser debitado da sua conta: ");
-                    scanf("%d", &valor);
-                    clientes[i].saldo -= valor;
+                if (aux == 0) {
+                    indice = i;
+                    break;
                 }
+            }
+
+            if (indice != -1) {
+                printf("Insira o valor que deseja debitar da sua conta: ");
+                scanf("%d", &valor);
+
+                if (valor > 0) {
+                    double taxa = 0.0;
+
+                    if (strcmp(clientes[indice].tipo, "comum") == 0) {
+                        taxa = valor * 0.05;
+                    } else if (strcmp(clientes[indice].tipo, "plus") == 0) {
+                        taxa = valor * 0.03;
+                    }
+
+                    if (clientes[indice].saldo - valor - taxa >= -1000.0) {
+                        clientes[indice].saldo -= (valor + taxa);
+                        printf("Debito de %d realizado com sucesso. Taxa cobrada de: %.2lf. Novo saldo: %.2lf\n", valor, taxa, clientes[indice].saldo);
+                    } else {
+                        printf("Saldo insuficiente ou limite de saldo negativo excedido.\n");
+                    }
+                } else {
+                    printf("O valor do debito deve ser maior que zero.\n");
+                }
+            } else {
+                printf("Erro interno: cliente não encontrado.\n");
             }
         }
     }
@@ -212,3 +256,105 @@ void deposito(int tam, Cliente *clientes) {
         }
     }
 }
+
+
+
+void transferencia(int tam, Cliente *clientes) {
+    char cpf_origem[20], cpf_destino[20];
+    int indice_origem, indice_destino, valor;
+
+    limpa();
+    printf("Insira o CPF da conta de origem: ");
+    scanf("%20[^\n]s", cpf_origem);
+
+    limpa();
+    printf("Insira o CPF da conta de destino: ");
+    scanf("%20[^\n]s", cpf_destino);
+
+    for (int i = 0; i < tam; i++) {
+        if (strcmp(clientes[i].cpf, cpf_origem) == 0) {
+            indice_origem = i;
+        }
+        if (strcmp(clientes[i].cpf, cpf_destino) == 0) {
+            indice_destino = i;
+        }
+    }
+
+    if (indice_origem >= 0 && indice_destino >= 0) {
+        printf("Insira o valor que deseja transferir: ");
+        scanf("%d", &valor);
+
+        if (valor > 0 && clientes[indice_origem].saldo >= valor) {
+            clientes[indice_origem].saldo -= valor;
+            clientes[indice_destino].saldo += valor;
+            printf("Transferencia de %d realizada com sucesso.\n", valor);
+        } else {
+            printf("Valor invalido ou saldo insuficiente na conta de origem.\n");
+        }
+    } else {
+        printf("Conta de origem ou conta de destino nao encontrada.\n");
+    }
+}
+
+void extrato(int tam, Cliente *clientes) {
+    char cpf[20];
+    char senha[20];
+    int aux = 0, aux2;
+
+    limpa();
+    printf("Insira o seu CPF: ");
+    scanf("%20[^\n]s", cpf);
+
+    aux = verificaCPF(tam, clientes, cpf);
+
+    if (!aux) {
+        printf("CPF nao encontrado.\n");
+    } else {
+        do {
+            limpa();
+            printf("Insira a sua senha: ");
+            scanf("%20[^\n]s", senha);
+            aux = verificaSenha(tam, clientes, senha);
+            if (aux) {
+                aux2 = 1;
+            } else {
+                printf("Senha invalida. (1 - sair)\n");
+                scanf("%d", &aux2);
+            }
+        } while (aux2 != 1);
+
+        int indice = -1;
+
+        for (int i = 0; i < tam; i++) {
+            aux = strncmp(cpf, clientes[i].cpf, 11);
+            if (aux == 0) {
+                indice = i;
+                break;
+            }
+        }
+
+        if (indice != -1) {
+            printf("Extrato do Cliente:\n");
+            printf("Nome: %s\n", clientes[indice].nome);
+            printf("CPF: %s\n", clientes[indice].cpf);
+            printf("Tipo de Conta: %s\n", clientes[indice].tipo);
+            printf("Saldo Atual: %.2lf\n", clientes[indice].saldo);
+
+            printf("Transacoes:\n");
+            for (int i = 0; i < tam; i++) {
+                for (int j = 0; j < 100; j++) {
+                    if (clientes[i].historico[j].valor != 0) {
+                        printf("Transacao %d: %.2lf\n", j + 1, clientes[i].historico[j].valor);
+                        printf("Descricao: %s\n", clientes[i].historico[j].descricao);
+                    }
+                }
+            }
+        } else {
+            printf("Erro interno: cliente nao encontrado.\n");
+        }
+    }
+}
+
+
+
+
