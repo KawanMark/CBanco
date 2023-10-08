@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "biblioteca.h"
+#include "Biblioteca_auxiliar.h"
 
 void menu();
 
@@ -9,7 +10,7 @@ int main() {
     int opcao, aux = 0, tamanho = 0;
 
     tamanho = tam(clientes);
-
+    printf("%d\n", tamanho);
     while (1){
 
         menu();
@@ -18,7 +19,8 @@ int main() {
         switch (opcao) {
             case 1:
                 printf("'Novo Cliente' selecionado.\n");
-                novo_cliente(tamanho, &clientes[tamanho]);
+                limpa();
+                novo_cliente(tamanho, clientes);
                 tamanho++;
                 break;
             case 2:

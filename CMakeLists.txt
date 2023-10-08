@@ -3,4 +3,6 @@ project(untitled C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(untitled main.c biblioteca.c biblioteca.h)
+add_executable(untitled main.c biblioteca.c biblioteca.h
+        Biblioteca_auxiliar.c
+        Biblioteca_auxiliar.h)
