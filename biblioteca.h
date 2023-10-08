@@ -19,10 +19,8 @@ typedef struct {
 
 }Cliente;
 
-int tam(Cliente *clientes);
 void listar_clientes(int tam, Cliente *cliente);
 void novo_cliente(int tamanho, Cliente *clientes);
-void escreve(int tam,  Cliente *cliente);
 void debito(int tam, Cliente *clientes);
 void deposito(int tam, Cliente *clientes);
 void apagar_cliente(int *tam, Cliente *clientes);
