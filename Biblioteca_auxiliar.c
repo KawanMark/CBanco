@@ -67,7 +67,7 @@ void arruma_tipo(int tamanho, char *tipo, Cliente *clientes){
     }
 }
 
-double aplica_taxa(int indice,  Cliente *clientes, int valor){
+double aplica_taxa(int indice,  Cliente *clientes, double valor){
     double taxa;
 
     if (!strcmp(clientes[indice].tipo, "comum"))
