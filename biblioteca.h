@@ -2,7 +2,8 @@
 #define UNTITLED_BIBLIOTECA_H
 
 typedef struct {
-
+    char origem[20]; 
+    char destino[20];
     double valor;
     double taxa;
     char descricao[50];
@@ -16,6 +17,7 @@ typedef struct {
     char cpf[20];
     char senha[10];
     Operacoes historico[100];
+    int num_transacoes;
 
 }Cliente;
 

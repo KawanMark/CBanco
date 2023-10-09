@@ -145,6 +145,11 @@ void debito(int tam, Cliente *clientes) {//Função de débito
                     if (clientes[indice].saldo - valor - taxa >= -5000.0)//Verifica o limite de saldo negativo
                     {
                         clientes[indice].saldo -= (valor + taxa);//Descontado o valor da conta
+                        strcpy(clientes[indice].historico[clientes[indice].num_transacoes].descricao, "Debito");
+                        clientes[indice].historico[clientes[indice].num_transacoes].valor = valor;
+                        clientes[indice].historico[clientes[indice].num_transacoes].taxa = taxa;
+                        clientes[indice].num_transacoes++;
+
                         printf("Debito de %d realizado com sucesso. Taxa cobrada de: %.2lf. Novo saldo: %.2lf\n", valor, taxa, clientes[indice].saldo);
                         //Confirmação do valor do valor removido, taxa cobrada e o saldo atual
                     }
@@ -159,6 +164,11 @@ void debito(int tam, Cliente *clientes) {//Função de débito
                     if (clientes[indice].saldo - valor - taxa >= -1000.0)//Verifica o limite de saldo negativo
                     {
                         clientes[indice].saldo -= (valor + taxa);//Descontado o valor da conta
+                        strcpy(clientes[indice].historico[clientes[indice].num_transacoes].descricao, "Debito");
+                        clientes[indice].historico[clientes[indice].num_transacoes].valor = valor;
+                        clientes[indice].historico[clientes[indice].num_transacoes].taxa = taxa;
+                        clientes[indice].num_transacoes++;
+
                         printf("Debito de %d realizado com sucesso. Taxa cobrada de: %.2lf. Novo saldo: %.2lf\n", valor, taxa, clientes[indice].saldo);
                         //Confirmação do valor removido, taxa cobrado e saldo atual
                     }
@@ -182,8 +192,9 @@ void deposito(int tam, Cliente *clientes) {
     char cpf[20], senha[20];
     int indice, aux, valor, confirma = 0;
 
-    limpa();
-    printf("Insira o seu CPF: ");scanf("%20[^\n]s", cpf);
+    //limpa();
+    printf("Insira o seu CPF: ");
+    scanf("%20[^\n]s", cpf);
 
     indice = verificaCPF(tam, clientes, cpf);
 
@@ -211,13 +222,26 @@ void deposito(int tam, Cliente *clientes) {
             }
         } while (confirma != 1);
 
-        printf("Insira o valor que deseja depositar na sua conta: "); scanf("%d", &valor);
+        printf("Insira o valor que deseja depositar na sua conta: "); 
+        scanf("%d", &valor);
 
         if (valor > 0)
         {
+            double taxa;
+            int tipo;
+
+            taxa = aplica_taxa(indice, clientes, valor);
+            tipo = confere_tipo(indice, clientes);
             clientes[indice].saldo += valor;
+
+            strcpy(clientes[indice].historico[clientes[indice].num_transacoes].descricao, "Depósito");
+            clientes[indice].historico[clientes[indice].num_transacoes].valor = valor;
+            clientes[indice].historico[clientes[indice].num_transacoes].taxa = taxa;
+            clientes[indice].num_transacoes++;
+
             printf("Deposito de %d realizado com sucesso. Novo saldo: %.2lf\n", valor, clientes[indice].saldo);
         }
+
         else
         {
             printf("O valor do deposito deve ser maior que zero.\n");
@@ -257,12 +281,33 @@ void transferencia(int tam, Cliente *clientes) {
             {
                 clientes[indice_origem].saldo -= valor;
                 clientes[indice_destino].saldo += valor;
+
+                strcpy(clientes[indice_origem].historico[clientes[indice_origem].num_transacoes].descricao, "Transferência (envio)");
+                clientes[indice_origem].historico[clientes[indice_origem].num_transacoes].valor = -valor;
+                clientes[indice_origem].historico[clientes[indice_origem].num_transacoes].taxa = taxa;
+                clientes[indice_origem].num_transacoes++;
+
+                 strcpy(clientes[indice_destino].historico[clientes[indice_destino].num_transacoes].descricao, "Transferência (recebimento)");
+                clientes[indice_destino].historico[clientes[indice_destino].num_transacoes].valor = valor;
+                clientes[indice_destino].historico[clientes[indice_destino].num_transacoes].taxa = 0; // Não há taxa para o destinatário
+                clientes[indice_destino].num_transacoes++;
+
                 printf("Transferencia de %.2lf realizada com sucesso.\n", valor);
             }
             else if(!tipo && (clientes[indice_origem].saldo - valor) >= -1000)
             {
                 clientes[indice_origem].saldo -= valor;
                 clientes[indice_destino].saldo += valor;
+
+                strcpy(clientes[indice_origem].historico[clientes[indice_origem].num_transacoes].descricao, "Transferência (envio)");
+                clientes[indice_origem].historico[clientes[indice_origem].num_transacoes].valor = -valor;
+                clientes[indice_origem].historico[clientes[indice_origem].num_transacoes].taxa = taxa;
+                clientes[indice_origem].num_transacoes++;
+        
+                strcpy(clientes[indice_destino].historico[clientes[indice_destino].num_transacoes].descricao, "Transferência (recebimento)");
+                clientes[indice_destino].historico[clientes[indice_destino].num_transacoes].valor = valor;
+                clientes[indice_destino].historico[clientes[indice_destino].num_transacoes].taxa = 0; // Não há taxa para o destinatário
+                clientes[indice_destino].num_transacoes++;
                 printf("Transferencia de %.2lf realizada com sucesso.\n", valor);
             }
             else
@@ -291,6 +336,7 @@ void imprimirExtrato(Cliente cliente) {
     printf("Transacoes:\n");
     for (int j = 0; j < 100; j++) {
         if (cliente.historico[j].valor != 0) {
+            printf("-------------------------\n");
             printf("Transacao %d:\n", j + 1);
             printf("Descricao: %s\n", cliente.historico[j].descricao);
             printf("Valor: %.2lf\n", cliente.historico[j].valor);
@@ -305,8 +351,8 @@ void extrato(int tam, Cliente *clientes) {
     char senha[20];
     int aux, aux2;
 
-    limpa();
     printf("Insira o seu CPF: ");
+    
     scanf("%20[^\n]s", cpf);
 
     aux = verificaCPF(tam, clientes, cpf);
