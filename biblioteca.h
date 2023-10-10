@@ -2,10 +2,11 @@
 #define UNTITLED_BIBLIOTECA_H
 
 typedef struct {
-
+    char origem[20]; 
+    char destino[20];
     double valor;
     double taxa;
-    char descricao[10];
+    char descricao[50];
 
 }Operacoes;
 
@@ -16,13 +17,15 @@ typedef struct {
     char cpf[20];
     char senha[10];
     Operacoes historico[100];
+    int num_transacoes;
 
 }Cliente;
 
-int tam(Cliente *clientes);
 void listar_clientes(int tam, Cliente *cliente);
-void novo_cliente(Cliente *cliente);
-void escreve(int tam,  Cliente *cliente);
+void novo_cliente(int tamanho, Cliente *clientes);
 void debito(int tam, Cliente *clientes);
-
+void deposito(int tam, Cliente *clientes);
+void apagar_cliente(int *tam, Cliente *clientes);
+void transferencia(int tam, Cliente *clientes);
+void extrato(int tam, Cliente *clientes);
 #endif
