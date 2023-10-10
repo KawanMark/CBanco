@@ -8,7 +8,7 @@ char nome_do_arquivo[20] = "lista_de_clientes";
 
 void limpa(){
     int c;
-    while ((c = getchar()) != '\n' && c != EOF) { }
+    while ((c = getchar()) != '\n' && c != EOF) {}
 }
 
 int verificaCPF(int tam, Cliente *clientes, char *compara){
@@ -63,7 +63,7 @@ void escreve(int tam,  Cliente *clientes) {
 
 void arruma_tipo(int tamanho, char *tipo, Cliente *clientes){
     for (int i = 0; i < strlen(tipo); i++) {
-        clientes[tamanho].tipo[i] = tolower(tipo[i]);
+        tipo[i] = tolower(tipo[i]);
     }
 }
 

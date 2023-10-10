@@ -2,7 +2,7 @@
 #define UNTITLED_BIBLIOTECA_H
 
 typedef struct {
-    char origem[20]; 
+    char origem[20];
     char destino[20];
     double valor;
     double taxa;

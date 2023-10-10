@@ -10,7 +10,6 @@ int main() {
     int opcao, aux = 0, tamanho = 0;
 
     tamanho = tam(clientes);
-    printf("%d\n", tamanho);
     while (1){
 
         menu();

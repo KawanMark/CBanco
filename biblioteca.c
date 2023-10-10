@@ -33,7 +33,7 @@ void novo_cliente(int tamanho, Cliente *clientes) {//Função de cadastrar clien
 
     do{// Função do while para pedir CPF até que seja válido
 
-        printf("CPF: "); scanf("%20[^\n]s",temp);
+        printf("CPF: "); scanf("%15[^\n]s",temp);
         aux = verificaCPF(tamanho, clientes, temp);//Verifica o CPF
         limpa();
 
@@ -50,19 +50,21 @@ void novo_cliente(int tamanho, Cliente *clientes) {//Função de cadastrar clien
     valido = 0;
 
     do {// Outro 'Do while' para o tipo de conta
-        printf("Tipo de Conta: (comum ou plus)"); scanf("%10s", temp);//É pedido o tipo de conta
+        char temp2[20];
+        printf("Tipo de Conta: (comum ou plus)"); scanf("%10s", temp2);//É pedido o tipo de conta
         limpa();
 
-        arruma_tipo(tamanho, temp, clientes);//Função que arruma o tipo de conta (Explicada na estrutura da função)
+        arruma_tipo(tamanho, temp2, clientes);//Função que arruma o tipo de conta (Explicada naestrutura da função)
 
-        if (!strcmp(clientes[tamanho].tipo, "comum") || !strcmp(clientes[tamanho].tipo, "plus"))// verifica caso o tipo não tenha sido bem inserido
+        if (!strcmp(temp2, "comum") || !strcmp(temp2, "plus"))// verifica caso o tipo não tenha sido bem inserido
         {
+            strcpy(clientes[tamanho].tipo, temp2);
             valido = 1; //condição de para do 'do while' ativa
         }
         else
         {
             //Condição caso o tipo da conta não tenha sido bem inserida
-            printf("Tipo de conta invalido: %s. Digite 'comum' ou 'plus'.\n", clientes[tamanho].tipo);
+            printf("Tipo de conta invalido: %s. Digite 'comum' ou 'plus'.\n", temp2);
         }
     } while (!valido);
 
@@ -222,7 +224,7 @@ void deposito(int tam, Cliente *clientes) {
             }
         } while (confirma != 1);
 
-        printf("Insira o valor que deseja depositar na sua conta: "); 
+        printf("Insira o valor que deseja depositar na sua conta: ");
         scanf("%d", &valor);
 
         if (valor > 0)
@@ -263,8 +265,8 @@ void transferencia(int tam, Cliente *clientes) {
     limpa();
 
 
-    printf("Indice de origem: %d\n", indice_origem);
-    printf("Indice de destino: %d\n", indice_destino);
+    printf("\nNome da conta de origem: %s\n", clientes[indice_origem].nome);
+    printf("Nome da conta de destino: %s\n\n", clientes[indice_destino].nome);
 
     if (indice_origem != -1 && -1 != indice_destino)
     {
@@ -275,11 +277,11 @@ void transferencia(int tam, Cliente *clientes) {
         {
             tipo = confere_tipo(indice_origem, clientes);
             taxa = aplica_taxa(indice_origem, clientes, valor);
-            valor += taxa;
+            double valorOrigem = valor + taxa;
 
             if(tipo && (clientes[indice_origem].saldo - valor) >= -5000)
             {
-                clientes[indice_origem].saldo -= valor;
+                clientes[indice_origem].saldo -= valorOrigem;
                 clientes[indice_destino].saldo += valor;
 
                 strcpy(clientes[indice_origem].historico[clientes[indice_origem].num_transacoes].descricao, "Transferência (envio)");
@@ -287,7 +289,7 @@ void transferencia(int tam, Cliente *clientes) {
                 clientes[indice_origem].historico[clientes[indice_origem].num_transacoes].taxa = taxa;
                 clientes[indice_origem].num_transacoes++;
 
-                 strcpy(clientes[indice_destino].historico[clientes[indice_destino].num_transacoes].descricao, "Transferência (recebimento)");
+                strcpy(clientes[indice_destino].historico[clientes[indice_destino].num_transacoes].descricao, "Transferência (recebimento)");
                 clientes[indice_destino].historico[clientes[indice_destino].num_transacoes].valor = valor;
                 clientes[indice_destino].historico[clientes[indice_destino].num_transacoes].taxa = 0; // Não há taxa para o destinatário
                 clientes[indice_destino].num_transacoes++;
@@ -303,7 +305,7 @@ void transferencia(int tam, Cliente *clientes) {
                 clientes[indice_origem].historico[clientes[indice_origem].num_transacoes].valor = -valor;
                 clientes[indice_origem].historico[clientes[indice_origem].num_transacoes].taxa = taxa;
                 clientes[indice_origem].num_transacoes++;
-        
+
                 strcpy(clientes[indice_destino].historico[clientes[indice_destino].num_transacoes].descricao, "Transferência (recebimento)");
                 clientes[indice_destino].historico[clientes[indice_destino].num_transacoes].valor = valor;
                 clientes[indice_destino].historico[clientes[indice_destino].num_transacoes].taxa = 0; // Não há taxa para o destinatário
@@ -343,8 +345,12 @@ void imprimirExtrato(Cliente cliente) {
             if (strcmp(cliente.historico[j].descricao, "Debito") == 0) {
                 printf("Taxa do Debito: %.2lf\n", cliente.historico[j].taxa);
             }
+            else if (strcmp(cliente.historico[j].descricao, "Transferência (envio)") == 0) {
+                printf("Taxa da Transferencia: %.2lf\n", cliente.historico[j].taxa);
+            }
         }
     }
+    printf("\n");
 }
 void extrato(int tam, Cliente *clientes) {
     char cpf[20];
@@ -352,7 +358,7 @@ void extrato(int tam, Cliente *clientes) {
     int aux, aux2;
 
     printf("Insira o seu CPF: ");
-    
+
     scanf("%20[^\n]s", cpf);
 
     aux = verificaCPF(tam, clientes, cpf);
@@ -363,12 +369,12 @@ void extrato(int tam, Cliente *clientes) {
         do {
             limpa();
             printf("Insira a sua senha: ");
-            scanf("%20[^\n]s", senha);
+            scanf("%15[^\n]s", senha);
             aux = verificaSenha(tam, clientes, senha);
             if (aux) {
                 aux2 = 1;
             } else {
-                printf("Senha invalida. (1 - sair)\n");
+                printf("Senha invalida. (1 - sair / 0 - Tentar novamente)\n");
                 scanf("%d", &aux2);
             }
         } while (aux2 != 1);
