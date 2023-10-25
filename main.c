@@ -5,7 +5,7 @@
 void menu();
 
 Cliente clientes[1000];
-lista_de_clientes usuarios;
+extern lista_de_clientes usuarios;
 
 
 
