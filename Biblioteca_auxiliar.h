@@ -3,8 +3,8 @@
 #include "biblioteca.h"
 
 
-void escreve(int tam,  Cliente *cliente);
-int tam(Cliente *clientes);
+void escreve(lista_de_clientes *usuarios);
+void tam(lista_de_clientes *usuarios);
 void limpa();
 int verificaSenha(int tam, Cliente *clientes, char *compara);
 int verificaCPF(int tam, Cliente *clientes, char *compara);

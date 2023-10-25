@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 
+lista_de_clientes usuarios;
+
 void apagar_cliente(int *tam, Cliente *clientes) { //Função de apagar clientes
     int indice;
 
@@ -12,7 +14,7 @@ void apagar_cliente(int *tam, Cliente *clientes) { //Função de apagar clientes
     if (indice >= 1 && indice <= *tam)//Verifica se o numero do cliente existe
     {
         for (int i = indice - 1; i < *tam - 1; i++) {
-            clientes[i] = clientes[i + 1];//Alteração de todos os clientes para posição anterior
+            usuarios.clientes[i] = usuarios.clientes[i + 1];//Alteração de todos os clientes para posição anterior
         }
         (*tam)--;//Reduz o numero de clientes
         printf("Cliente de numero %d apagado com sucesso.\n", indice);
@@ -336,19 +338,42 @@ void imprimirExtrato(Cliente cliente) {
     printf("Saldo Atual: %.2lf\n", cliente.saldo);
 
     printf("Transacoes:\n");
-    for (int j = 0; j < 100; j++) {
+    char arquivo[50];
+    sprintf(arquivo, "%s.txt", cliente.cpf);
+
+    
+
+    FILE *f = fopen(arquivo, "w");
+
+    if(f== NULL){
+        printf("ERRO AO ABRIR");
+    }
+    for (int j = 0; j < cliente.num_transacoes; j++) {
         if (cliente.historico[j].valor != 0) {
+            
+            fprintf(f, "-------------------------\n");
             printf("-------------------------\n");
+
+            fprintf(f, "Transacao %d:\n", j + 1);
             printf("Transacao %d:\n", j + 1);
+
+            fprintf(f, "Descricao: %s\n", cliente.historico[j].descricao);
             printf("Descricao: %s\n", cliente.historico[j].descricao);
+
+            fprintf(f, "Valor: %.2lf\n", cliente.historico[j].valor);
             printf("Valor: %.2lf\n", cliente.historico[j].valor);
+
             if (strcmp(cliente.historico[j].descricao, "Debito") == 0) {
+                fprintf(f, "Taxa do Debito: %.2lf\n", cliente.historico[j].taxa);
                 printf("Taxa do Debito: %.2lf\n", cliente.historico[j].taxa);
             }
             else if (strcmp(cliente.historico[j].descricao, "Transferência (envio)") == 0) {
+                fprintf(f, "Taxa da Transferencia: %.2lf\n", cliente.historico[j].taxa);
                 printf("Taxa da Transferencia: %.2lf\n", cliente.historico[j].taxa);
             }
         }
+
+        fclose(f);
     }
     printf("\n");
 }

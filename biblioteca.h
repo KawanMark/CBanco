@@ -21,6 +21,11 @@ typedef struct {
 
 }Cliente;
 
+typedef struct{
+    Cliente clientes[1000];
+    int tamanho;
+} lista_de_clientes;
+
 void listar_clientes(int tam, Cliente *cliente);
 void novo_cliente(int tamanho, Cliente *clientes);
 void debito(int tam, Cliente *clientes);
@@ -28,4 +33,5 @@ void deposito(int tam, Cliente *clientes);
 void apagar_cliente(int *tam, Cliente *clientes);
 void transferencia(int tam, Cliente *clientes);
 void extrato(int tam, Cliente *clientes);
+void menu();
 #endif

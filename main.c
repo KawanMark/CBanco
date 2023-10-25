@@ -5,11 +5,16 @@
 void menu();
 
 Cliente clientes[1000];
+lista_de_clientes usuarios;
+
+
 
 int main() {
-    int opcao, aux = 0, tamanho = 0;
+    int opcao, aux = 0; //, tamanho = 0;
 
-    tamanho = tam(clientes);
+    
+    tam(&usuarios);
+    
     while (1){
 
         menu();
@@ -19,43 +24,43 @@ int main() {
             case 1:
                 printf("'Novo Cliente' selecionado.\n");
                 limpa();
-                novo_cliente(tamanho, clientes);
-                tamanho++;
+                novo_cliente(usuarios.tamanho, usuarios.clientes);
+                usuarios.tamanho++;
                 break;
             case 2:
                 printf("'Apaga Cliente' selecionado.\n");
                 limpa();
-                apagar_cliente(&tamanho, clientes);
+                apagar_cliente(&usuarios.tamanho, usuarios.clientes);
                 break;
             case 3:
                 printf("'Listar Cliente' selecionado.\n");
                 limpa();
-                listar_clientes(tamanho, clientes);
+                listar_clientes(usuarios.tamanho, usuarios.clientes);
                 break;
             case 4:
                 printf("'Debito' selecionado.\n");
                 limpa();
-                debito(tamanho, clientes);
+                debito(usuarios.tamanho, usuarios.clientes);
                 break;
             case 5:
                 printf("'Deposito' selecionado.\n");
                 limpa();
-                deposito(tamanho, clientes);
+                deposito(usuarios.tamanho, usuarios.clientes);
                 break;
             case 6:
                 printf("'Extrato' selecionado.\n");
                 limpa();
-                extrato(tamanho, clientes);
+                extrato(usuarios.tamanho, usuarios.clientes);
                 break;
             case 7:
                 printf("'Transferencia entre contas' selecionado.\n");
                 limpa();
-                transferencia(tamanho, clientes);
+                transferencia(usuarios.tamanho, usuarios.clientes);
                 break;
             case 0:
                 printf("'Sair' selecionado.\n");
                 limpa();
-                escreve(tamanho, clientes);
+                escreve(&usuarios);
                 aux = 1;
                 break;
             default:

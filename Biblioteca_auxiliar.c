@@ -39,24 +39,20 @@ int verificaSenha(int tam, Cliente *clientes, char *compara){
     return aux;
 }
 
-int tam(Cliente *clientes) {
+void tam(lista_de_clientes *usuarios) {
     FILE *arquivo = fopen(nome_do_arquivo, "rb");
-    int cont = 0;
+    
     if (arquivo) {
-        while (fread(&clientes[cont], sizeof(Cliente), 1, arquivo) == 1) {
-            cont++;
-        }
+        fread(usuarios, sizeof(lista_de_clientes), 1, arquivo);
         fclose(arquivo);
     }
-    return cont;
 }
 
-
-void escreve(int tam,  Cliente *clientes) {
-    FILE *arquivo= fopen(nome_do_arquivo, "wb");
-
+void escreve(lista_de_clientes *usuarios) {
+    FILE *arquivo = fopen(nome_do_arquivo, "wb");
+    
     if (arquivo) {
-        fwrite(clientes, sizeof(Cliente), tam, arquivo);
+        fwrite(usuarios, sizeof(lista_de_clientes), 1, arquivo);
         fclose(arquivo);
     }
 }
