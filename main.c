@@ -13,12 +13,12 @@ int main() {
     int opcao, aux = 0; //, tamanho = 0;
 
     
-    tam(&usuarios);
+    tam(&usuarios);//Para armazenar o tamanho da lista de clientes
     
     while (1){
 
         menu();
-        scanf("%d", &opcao);
+        scanf("%d", &opcao);//recebe a opção do menu desejada
 
         switch (opcao) {
             case 1:
@@ -73,6 +73,7 @@ int main() {
     return 0;
 }
 
+//Função com a formatação do menu
 void menu(){
     printf("Bem vindo ao banco Quem Poupa Tem. Qual operacao voce precisa hoje ?\n");
     printf("1. Novo Cliente\n");
